@@ -1,0 +1,29 @@
+name: Run Telegram Crypto Bot
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Menjalankan setiap jam
+  workflow_dispatch:     # Memungkinkan menjalankan secara manual
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+          pip install pyTelegramBotAPI
+
+      - name: Run bot script
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python main.py
