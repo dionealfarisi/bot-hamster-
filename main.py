@@ -1,10 +1,11 @@
 import telebot
 import requests
 import time
+import os
 
-# Masukkan token bot dan ID channel
-TOKEN = "7697093794:AAEn6athk-FuRUknkH7vlHt4wmg97Z-2owM"
-CHANNEL_ID = "@hamsterpricesss"  # Contoh: @btcpricesss
+# Ambil token dari environment variable
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+CHANNEL_ID = "@hamsterpricesss"
 CRYPTO_API_URL = 'https://api.coingecko.com/api/v3/simple/price?ids=hamster-kombat&vs_currencies=usd'
 
 # Inisialisasi bot
@@ -16,17 +17,12 @@ def get_crypto_price():
     data = response.json()
     return data['hamster-kombat']['usd']
 
-# Menyimpan harga terakhir untuk pengecekan perubahan
 last_price = None
 
-# Loop untuk mengirim harga setiap satu jam jika ada perubahan
 while True:
     price = get_crypto_price()
-    
-    # Mengirim pesan hanya jika harga berubah
     if price != last_price:
         message = f"{price}$"
         bot.send_message(CHANNEL_ID, message)
-        last_price = price  # Update harga terakhir
-    
-    time.sleep(1000)  # Menunggu 1 jam sebelum pengecekan ulang
+        last_price = price
+    time.sleep(1000)
